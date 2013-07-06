@@ -3,7 +3,8 @@ require_relative "hiki2mw/common"
 
 source = ""
 while line = gets
-  source << NKF.nkf("-w", line)
+  source << line
 end
+source = NKF.nkf("-w", source)
 
 puts Hiki2MW.convert(source)
