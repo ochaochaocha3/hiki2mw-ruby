@@ -1,0 +1,14 @@
+Hiki2MediaWiki Ruby 版
+======================
+[Hiki2MediaWiki（汎用版）](http://www.li-sa.jp/ocha3/hiki2mw/general/)の Ruby 版です。現在製作中。
+
+使用法
+------
+標準入力から Hiki ソースを読み取り、標準出力に MediaWiki ソースを出力します。
+
+    ruby hiki2mw.rb foo-hiki.txt > foo-mw.txt
+
+ToDo
+----
+* リンク解析機能の実装
+* リンク解析結果の出力機能の実装
