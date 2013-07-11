@@ -1,6 +1,6 @@
-require "nkf"
+require "kconv"
 require_relative "hiki2mw/common"
 
-source = NKF.nkf("-w", ARGF.read)
+source = ARGF.read.toutf8
 
 puts Hiki2MW.convert(source)
