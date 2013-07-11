@@ -2,8 +2,9 @@ module Hiki2MW
   class Converter
     attr_accessor :source
 
-    def initialize(source)
+    def initialize(source, options = {})
       @source = source
+      @convert_parened_links = !!options[:convert_parened_links]
     end
 
     def convert
@@ -242,18 +243,47 @@ module Hiki2MW
       [/^(\*#{get_link_re(/namazu:.+?/)})/, '//\1'], # [[namazu:]]
       [get_link_re(/(#{URI_RE})/), '\1'], # [[URI]]
       [get_link_re(/([^\]|]+)\|(#{URI_RE})/), '[\2 \1]'], # [[リンク名|URI]]
-      [get_link_re(/([^\]|]+)\|(.*?)/), '[[\2|\1]]'], # [[リンク名|ページ名]]
+      [get_link_re(/([^\]|]+)\|(.+?)/), '[[\2|\1]]'], # [[リンク名|ページ名]]
       [get_plugin_re("br"), "<br />"], # {{br}}
       [get_plugin_re(/isbnImg\(?'([^']+)'\)?/), '<amazon>\1</amazon>'], # {{isbnImg''}}, {{isbnImg('')}}
       [%r!\n{2,}(//)!, "\\n\\1"], # コメント前の重複改行の除去
       [%r!^//(.*)!, '<!-- \1 -->'] # コメント
     ]
 
+    PARENED_LINK_RE = get_link_re(/([^|]+?)/)
+    PIPED_PARENED_LINK_MW_RE = get_link_re(/([^\]|]+)\|(.+?)/)
+
     def convert_in_block_after(source)
       source_converted = source.dup
+
       PATTERNS_AFTER.each do |re, replace_str|
         source_converted.gsub!(re, replace_str)
       end
+
+      if @convert_parened_links
+        source_converted.gsub!(PARENED_LINK_RE) do |text|
+          page_name = $1
+          if page_name[-1] == ")" && (lparen_index = page_name.rindex("(")) &&
+            lparen_index != 0 && page_name[lparen_index - 1] != " "
+            page_name.insert(lparen_index, " ")
+            "[[#{page_name}]]"
+          else
+            text
+          end
+        end
+
+        source_converted.gsub!(PIPED_PARENED_LINK_MW_RE) do |text|
+          page_name = $1
+          if page_name[-1] == ")" && (lparen_index = page_name.rindex("(")) &&
+            lparen_index != 0 && page_name[lparen_index - 1] != " "
+            page_name.insert(lparen_index, " ")
+            "[[#{page_name}|#{$2}]]"
+          else
+            text
+          end
+        end
+      end
+
       source_converted
     end
 
