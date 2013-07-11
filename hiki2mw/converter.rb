@@ -1,7 +1,6 @@
 module Hiki2MW
   class Converter
     attr_accessor :source
-    attr_reader :lines
 
     def initialize(source)
       @source = source
