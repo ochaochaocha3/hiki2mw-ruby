@@ -100,9 +100,9 @@ module Hiki2MW
               @lines[i] = ""
             end
           when :heading
-            append_heading Heading.new(self, i)
+            append_heading Heading.new(i, line)
           when :heading_comment
-            append_heading Heading.new(self, i, true)
+            append_heading Heading.new(i, line, true)
           when :d_list
             convert_d_list i
           end
@@ -261,14 +261,10 @@ module Hiki2MW
     class Heading
       attr_reader :parent, :children, :line_index, :level, :content, :comment
 
-      def initialize(converter, line_index, comment = false)
-        @lines = converter.lines
-
+      def initialize(line_index, line, comment = false)
         @parent = nil
         @children = []
-
         @line_index = line_index
-        line = @lines[@line_index]
 
         if comment
           str_heading = line[FORMAT_RE[:heading_comment].match(line)[1].length..-1]
