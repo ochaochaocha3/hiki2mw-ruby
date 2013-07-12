@@ -1,4 +1,10 @@
 module Hiki2MW
+  #
+  # Hiki2MediaWiki コンバータ
+  #
+  # Authors:: ocha
+  # Version:: 2013-07-12
+  #
   class Converter
     attr_accessor :source
 
@@ -264,7 +270,7 @@ module Hiki2MW
         source_converted.gsub!(PARENED_LINK_RE) do |text|
           page_name = $1
           if page_name[-1] == ")" && (lparen_index = page_name.rindex("(")) &&
-            lparen_index != 0 && page_name[lparen_index - 1] != " "
+              lparen_index != 0 && page_name[lparen_index - 1] != " "
             page_name.insert(lparen_index, " ")
             "[[#{page_name}]]"
           else
@@ -275,7 +281,7 @@ module Hiki2MW
         source_converted.gsub!(PIPED_PARENED_LINK_MW_RE) do |text|
           page_name = $1
           if page_name[-1] == ")" && (lparen_index = page_name.rindex("(")) &&
-            lparen_index != 0 && page_name[lparen_index - 1] != " "
+              lparen_index != 0 && page_name[lparen_index - 1] != " "
             page_name.insert(lparen_index, " ")
             "[[#{page_name}|#{$2}]]"
           else
