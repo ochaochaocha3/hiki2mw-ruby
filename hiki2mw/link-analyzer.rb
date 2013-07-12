@@ -34,7 +34,7 @@ module Hiki2MW
     WIKI_NAME_DET_RE_MW = /#{BRACKET_LINK_RE}|\[#{URI_RE} .+?\]|#{URI_RE}|#{WIKI_NAME_RE}/
 
     def analyze
-      result = {:alphabetical => [], :paren => [], :wikiname => []}
+      result = {:alphabetical => [], :parened => [], :wikiname => []}
 
       @lines.with_index(1) do |l, line_num|
         # [[]] リンク
@@ -67,7 +67,7 @@ module Hiki2MW
           # 括弧を含む名前のページへのリンク
           if (page_name[-1] == ")" || page_name[-1] == "）") &&
               /[(（]/ =~ page_name
-            result[:paren] << {
+            result[:parened] << {
               :line_num => line_num,
               :char_num => char_num,
               :link => matches[0],
