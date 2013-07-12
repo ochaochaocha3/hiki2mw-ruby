@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Hiki2MW
   #
   # Hiki2MediaWiki コンバータ
