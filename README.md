@@ -11,8 +11,3 @@ Ruby 1.9.2 以降。
 標準入力から Hiki ソースを読み取り、標準出力に MediaWiki ソースを出力します。
 
     ruby hiki2mw.rb foo-hiki.txt > foo-mw.txt
-
-ToDo
-----
-* リンク解析機能の実装
-* リンク解析結果の出力機能の実装
