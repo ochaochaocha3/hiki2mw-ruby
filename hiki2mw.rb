@@ -1,5 +1,5 @@
 require "kconv"
-require_relative "hiki2mw/common"
+require_relative "hiki2mw/converter"
 
 source = ARGF.read.toutf8
 

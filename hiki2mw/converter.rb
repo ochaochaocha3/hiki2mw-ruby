@@ -385,4 +385,9 @@ module Hiki2MW
       end
     end
   end
+
+  module_function
+  def convert(source, options = {})
+    Hiki2MW::Converter.new(source, options).convert
+  end
 end
