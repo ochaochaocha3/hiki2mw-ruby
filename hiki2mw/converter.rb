@@ -11,23 +11,27 @@ module Hiki2MW
     attr_accessor :source
 
     def initialize(source, options = {})
+      default_options = {:convert_parened_links => false, :srw_wiki => false}
+      options = default_options.merge(options)
+
       @source = source
       @convert_parened_links = !!options[:convert_parened_links]
+      @srw_wiki = !!options[:srw_wiki]
     end
 
     def convert
-      source_converted = @source.dup
+      source = @source.dup
 
-      source_converted.gsub!(/\r\n/, "\n")
-      source_converted = minify_lfs(source_converted)
+      source.gsub!(/\r\n/, "\n")
+      source = minify_lfs(source)
 
-      source_converted = convert_in_block_before(source_converted)
-      source_converted = convert_line_by_line(source_converted)
-      source_converted = convert_in_block_after(source_converted)
+      source = convert_in_block_before(source)
+      source = convert_line_by_line(source)
+      source = convert_in_block_after(source)
 
-      source_converted = minify_lfs(source_converted)
+      source = minify_lfs(source)
 
-      source_converted
+      source
     end
 
     def self.get_link_re(name)
@@ -108,9 +112,11 @@ module Hiki2MW
               @lines[i] = ""
             end
           when :heading
-            append_heading Heading.new(i, line)
+            append_heading Heading.new(i, line, :srw_wiki => @srw_wiki)
           when :heading_comment
-            append_heading Heading.new(i, line, true)
+            append_heading Heading.new(
+              i, line, :comment => true, :srw_wiki => @srw_wiki
+            )
           when :d_list
             convert_d_list i
           end
@@ -298,12 +304,17 @@ module Hiki2MW
     class Heading
       attr_reader :parent, :children, :line_index, :level, :content, :comment
 
-      def initialize(line_index, line, comment = false)
+      def initialize(line_index, line, options = {})
+        default_options = {:comment => false, :srw_wiki => false}
+        options = default_options.merge(options)
+
         @parent = nil
         @children = []
         @line_index = line_index
+        @comment = !!options[:comment]
+        @srw_wiki = !!options[:srw_wiki]
 
-        if comment
+        if @comment
           str_heading = line[FORMAT_RE[:heading_comment].match(line)[1].length..-1]
         else
           str_heading = line
@@ -311,14 +322,13 @@ module Hiki2MW
 
         matches = FORMAT_RE[:heading].match(str_heading)
         @level = matches[0].length
-        @content = matches.post_match.gsub(/[ 　]+（/, "（")
-        @comment = comment
+        @content = matches.post_match
+        @content.gsub!(/[ 　]+（/, "（") if @srw_wiki
       end
 
       def append_to(parent)
         @parent = parent
         parent.children << self
-
         self
       end
     end
