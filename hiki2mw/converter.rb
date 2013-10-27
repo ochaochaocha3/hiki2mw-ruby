@@ -253,7 +253,7 @@ module Hiki2MW
 
     PATTERNS_AFTER = [
       [get_plugin_re("toc"), ""], # {{toc}}
-      [/^(\*#{get_link_re(/一覧:.+?/)})/, '//\1'], # [[一覧:]]
+      [get_link_re(/一覧:(.+?)/), '{{検索|\1}}'], # [[一覧:]]
       [/^(\*#{get_link_re(/namazu:.+?/)})/, '//\1'], # [[namazu:]]
       [get_link_re(/(#{URI_RE})/), '\1'], # [[URI]]
       [get_link_re(/([^\]|]+)\|(#{URI_RE})/), '[\2 \1]'], # [[リンク名|URI]]

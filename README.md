@@ -1,6 +1,6 @@
 Hiki2MediaWiki Ruby 版
 ======================
-[Hiki2MediaWiki（汎用版）](http://www.li-sa.jp/ocha3/hiki2mw/general/)の Ruby 版です。現在製作中。
+[クリエイターズネットワーク](http://cre.jp/) の Hiki のページのソースを MediaWiki のページのソースへと変換するためのスクリプトです。[Hiki2MediaWiki（汎用版）](http://www.li-sa.jp/ocha3/hiki2mw/general/)の Ruby 版です。
 
 動作環境
 --------
